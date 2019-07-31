@@ -1,5 +1,10 @@
-#Define Auth Token
-$token = "5572078-oiaoGKRf1VrtYXD7UWRO"
+#Define Auth Token for TeamViewer
+$token = "3462611-habtKKAf1VrtYJD2UWZO"
+
+# Automation Acccount credentials
+$IntuneROAccount = "IntuneROAccount"
+
+# Check TeamViewer device name matches this pattern
 $NamingPatternMatch = '\[(.+)\]' # \[ matches the character [ literally (case insensitive)
                                  # 1st Capturing Group (.+)
                                  # .+ matches any character (except for line terminators)
@@ -77,6 +82,15 @@ Function  Get-IntuneDevicePrimaryUser {
 }
 
 Import-Module -Name Microsoft.Graph.Intune
+
+# Get Automation Credentials
+try{
+    $creds = Get-AutomationPSCredential -Name $IntuneROAccount
+    Write-output -inputobject "Got account creds for: [$IntuneROAccount]"
+} Catch {
+    write-error -Message "Could not get creds for account: [$IntuneROAccount] $_"
+    return
+}
 
 # Connect to MS Graph API
 Connect-MSGraph -PSCredential $creds -ErrorAction Stop
